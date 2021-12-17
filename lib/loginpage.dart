@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/src/provider.dart';
 import 'package:uiecommerce/registerpage.dart';
+import 'package:uiecommerce/services/services_authentications.dart';
 import 'package:uiecommerce/static/color.dart';
 
 class LoginPage extends StatefulWidget {
@@ -11,6 +13,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -81,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadiusDirectional.circular(10),
                       ),
                       child: TextField(
+                        controller: emailController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.mail_outline_outlined,
@@ -116,6 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadiusDirectional.circular(10),
                       ),
                       child: TextField(
+                        controller: passwordController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.lock_outline,
@@ -142,7 +149,12 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          context.read<AuthenticationService>().signIn(
+                                emailController.text.trim(),
+                                passwordController.text.trim(),
+                              );
+                        },
                         child: Text(
                           "Login",
                           style: GoogleFonts.roboto(

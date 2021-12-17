@@ -1,4 +1,4 @@
-package com.example.uiecommerce
+package com.tenanan.auth
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/src/provider.dart';
+import 'package:uiecommerce/loginpage.dart';
+import 'package:uiecommerce/services/services_authentications.dart';
 import 'package:uiecommerce/static/color.dart';
+import 'package:uiecommerce/static/widgetlibrary.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -10,6 +14,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -112,6 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           color: ThemeApp.inputcolor,
                         ),
                         child: TextField(
+                          controller: emailController,
                           decoration: InputDecoration(
                               prefixIcon: Icon(Icons.mail_outline),
                               border: InputBorder.none,
@@ -144,6 +151,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           color: ThemeApp.inputcolor,
                         ),
                         child: TextField(
+                          controller: passwordController,
                           decoration: InputDecoration(
                               prefixIcon: Icon(
                                 Icons.password_outlined,
@@ -171,7 +179,19 @@ class _RegisterPageState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            AuthResult result = await context
+                                .read<AuthenticationService>()
+                                .signUp(
+                                  emailController.text.trim(),
+                                  passwordController.text.trim(),
+                                );
+
+                            if (!result.success) {
+                              WidgetLibrary.showDialogError(context,
+                                  'Oops.. Login Failed', result.message!);
+                            }
+                          },
                           child: Text(
                             "Register",
                             style: GoogleFonts.roboto(
@@ -285,11 +305,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                 color: Colors.grey,
                               ),
                             ),
-                            Text(
-                              "Login Sekarang",
-                              style: GoogleFonts.roboto(
-                                fontWeight: FontWeight.bold,
-                                color: ThemeApp.secondaryGreens,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                "Login Sekarang",
+                                style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.bold,
+                                  color: ThemeApp.secondaryGreens,
+                                ),
                               ),
                             ),
                           ],
